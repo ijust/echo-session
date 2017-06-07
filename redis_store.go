@@ -30,6 +30,16 @@ func NewRedisStore(size int, network, address, password string, keyPairs ...[]by
 	return &redisStore{store}, nil
 }
 
+// NewRediStoreWithDB - like NewRedisStore but accepts `DB` parameter to select
+// redis DB instead of using the default one ("0")
+func NewRedisStoreWithDB(size int, network, address, password, db string, keyPairs ...[]byte) (RedisStore, error) {
+	store, err := redistore.NewRediStoreWithDB(size, network, address, password, db, keyPairs...)
+	if err != nil {
+		return nil, err
+	}
+	return &redisStore{store}, nil
+}
+
 type redisStore struct {
 	*redistore.RediStore
 }
