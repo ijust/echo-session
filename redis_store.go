@@ -8,6 +8,7 @@ import (
 
 type RedisStore interface {
 	Store
+	GetStore() *redistore.RediStore
 }
 
 // size: maximum number of idle connections.
@@ -85,4 +86,8 @@ func (c *redisStore) Options(options Options) {
 // use this function to change `MaxAge` value.
 func (c *redisStore) MaxAge(age int) {
 	c.RediStore.SetMaxAge(age)
+}
+
+func (c *redisStore) GetStore() *redistore.RediStore {
+	return c.RediStore
 }
