@@ -68,14 +68,15 @@ func Sessions(name string, store Store) echo.MiddlewareFunc {
 func SessionsWithKey(name, key string, store Store) echo.MiddlewareFunc {
 	return func(h echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
-			rq := ctx.Request()
-			rs := ctx.Response()
-			s := &session{name, rq, store, nil, false, rs.Writer}
-			ctx.Set(key, s)
-			defer context.Clear(rq)
+			SetContextSession(ctx, name, key, store)
+			defer context.Clear(ctx.Request())
 			return h(ctx)
 		}
 	}
+}
+
+func SetContextSession(ctx echo.Context, name, key string, store Store) {
+	ctx.Set(key, &session{name, ctx.Request(), store, nil, false, ctx.Response().Writer})
 }
 
 type session struct {
